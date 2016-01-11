@@ -23,10 +23,19 @@
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
-namespace PrestaShop\PrestaShop\Core\Business\Addon;
+namespace PrestaShop\PrestaShop\Core\Business\Addon\Theme;
+
+use PrestaShop\PrestaShop\Core\Business\ConfigurationInterface;
+use PrestaShop\PrestaShop\Core\Business\Addon\AddonManagerInterface;
+use PrestaShop\PrestaShop\Core\Business\Addon\AddonListFilter;
+use PrestaShop\PrestaShop\Core\Business\Addon\AddonListFilterType;
+use PrestaShop\PrestaShop\Core\Business\Addon\AddonListFilterStatus;
 
 class ThemeManager implements AddonManagerInterface
 {
+    private $configurator;
+    private $themes;
+
     /**
      * Add new theme from zipball. This will unzip the file and move the content
      * to the right locations.
@@ -48,7 +57,7 @@ class ThemeManager implements AddonManagerInterface
      * or a location (url or path to the zip file)
      * @return bool true for success
      */
-    public function uninstall(Addon $theme)
+    public function uninstall($name)
     {
         return true;
     }
@@ -62,7 +71,7 @@ class ThemeManager implements AddonManagerInterface
     * @param string $source if the upgrade is not coming from addons, you need to specify the path to the zipball
     * @return bool true for success
     */
-    public function upgrade(Addon $theme, $version, $source = null)
+    public function upgrade($name, $version, $source = null)
     {
         return true;
     }
@@ -101,5 +110,85 @@ class ThemeManager implements AddonManagerInterface
     public function reset($name)
     {
         return true;
+    }
+
+    public function getInstanceByName($name)
+    {
+        $theme = $this->getJsonConfig($name, 'theme.json');
+
+        if (isset($theme)) {
+            $theme->settings = $this->getJsonConfig($name, 'settings.json');
+        }
+
+        return $theme;
+    }
+
+    public function getThemeList()
+    {
+        if (!isset($this->themes)) {
+            $this->themes = $this->getAddonList(new AddonListFilter());
+        }
+
+        return $this->themes;
+    }
+
+    public function getThemeListExcluding(array $exclude)
+    {
+        $filter = (new AddonListFilter())
+            ->setExclude($exclude);
+
+        return $this->getAddonList($filter);
+    }
+
+    public function getAddonList(AddonListFilter $filter)
+    {
+        $filter->setType(AddonListFilterType::THEME);
+
+        if (!isset($filter->status)) {
+            $filter->setStatus(AddonListFilterStatus::ALL);
+        }
+
+        $themes = $this->getThemeOnDisk();
+
+        foreach ($filter->exclude as $name) {
+            unset($themes[$name]);
+        }
+
+        return $themes;
+    }
+
+    public function setConfigurator(ConfigurationInterface $configurator)
+    {
+        $this->configurator = $configurator;
+        return $this;
+    }
+
+    private function getJsonConfig($theme_name, $filename)
+    {
+        $file = $this->configurator->get('_PS_ALL_THEMES_DIR_')
+                .$theme_name
+                .'/config/'.$filename;
+
+        if (file_exists($file)) {
+            return json_decode(file_get_contents($file));
+        }
+
+        return null;
+    }
+
+    private function getThemeOnDisk()
+    {
+        $all_theme_dirs = glob($this->configurator->get('_PS_ALL_THEMES_DIR_').'*/', GLOB_ONLYDIR);
+
+        $themes = [];
+        foreach ($all_theme_dirs as $dir) {
+            $name = basename($dir);
+            $theme = $this->getInstanceByName($name);
+            if (isset($theme)) {
+                $themes[$name] = $theme;
+            }
+        }
+
+        return $themes;
     }
 }
