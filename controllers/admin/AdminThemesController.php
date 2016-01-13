@@ -519,7 +519,7 @@ class AdminThemesControllerCore extends AdminController
 
     public function initConfigureLayouts()
     {
-        $pages = Meta::getPages();
+        $pages = Meta::getPagesDetailed($this->context->language->id);
 
         $this->context->smarty->assign([
             'pages' => $pages,

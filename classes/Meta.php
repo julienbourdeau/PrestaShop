@@ -149,6 +149,34 @@ class MetaCore extends ObjectModel
 		'.Shop::addSqlRestrictionOnLang('ml'));
     }
 
+    public static function getAllMeta($id_lang)
+    {
+        return Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS('
+		SELECT *
+		FROM '._DB_PREFIX_.'meta m
+		LEFT JOIN '._DB_PREFIX_.'meta_lang ml ON m.id_meta = ml.id_meta
+		AND ml.id_lang = '.(int)$id_lang.'
+		'.Shop::addSqlRestrictionOnLang('ml'));
+    }
+
+    public static function getPagesDetailed($id_lang)
+    {
+        $all_meta = Meta::getAllMeta($id_lang);
+        $pages = Meta::getPages();
+        $meta = [];
+
+        foreach ($all_meta as $val) {
+            $meta[$val['page']] = $val;
+        }
+        foreach ($meta as $id => $m) {
+            if (!in_array($id, $pages)) {
+                unset($meta[$id]);
+            }
+        }
+
+        return $meta;
+    }
+
     public function update($null_values = false)
     {
         if (!parent::update($null_values)) {
