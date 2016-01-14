@@ -528,8 +528,8 @@ class AdminThemesControllerCore extends AdminController
 
         $this->context->smarty->assign([
             'pages' => $pages,
-            'page_layouts' => $this->context->shop->theme->settings->page_layouts,
-            'available_layouts' => $this->context->shop->theme->settings->available_layouts,
+            'page_layouts' => $this->context->shop->theme->settings['page_layouts'],
+            'available_layouts' => $this->context->shop->theme->meta['available_layouts'],
         ]);
 
         $this->setTemplate('controllers/themes/configurelayouts.tpl');
