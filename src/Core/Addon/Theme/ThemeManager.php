@@ -26,6 +26,7 @@
 namespace PrestaShop\PrestaShop\Core\Addon\Theme;
 
 use PrestaShop\PrestaShop\Core\ConfigurationInterface;
+use PrestaShop\PrestaShop\Core\Addon\Theme\ThemeChecker;
 use PrestaShop\PrestaShop\Core\Addon\AddonManagerInterface;
 use PrestaShop\PrestaShop\Core\Addon\AddonListFilter;
 use PrestaShop\PrestaShop\Core\Addon\AddonListFilterType;
@@ -41,11 +42,13 @@ class ThemeManager implements AddonManagerInterface
     public function __construct(
         \Shop $shop,
         ConfigurationInterface $configurator,
+        ThemeChecker $theme_checker,
         \Employee $employee = null)
     {
         $this->shop = $shop;
-        $this->employee = $employee;
         $this->configurator = $configurator;
+        $this->theme_checker = $theme_checker;
+        $this->employee = $employee;
     }
 
     /**
@@ -103,11 +106,13 @@ class ThemeManager implements AddonManagerInterface
             return false;
         }
 
-        $this->disable($this->shop->theme_name);
-
         $theme = $this->getInstanceByName($name);
-        $theme->onEnable();
+        if (!$this->theme_checker->setTheme($theme)->isValid()) {
+            return false;
+        }
 
+        $this->disable($this->shop->theme_name);
+        $theme->onEnable();
         $this->shop->theme_name = $theme->name;
         $this->shop->update();
 
