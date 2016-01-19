@@ -113,10 +113,10 @@ class ThemeManager implements AddonManagerInterface
 
         $this->disable($this->shop->theme_name);
 
-        $this->doApplyConfiguration($this->theme->global_settings['configuration'])
-                ->doDisableModules($this->theme->global_settings['modules']['toDisable'])
-                ->doEnableModules($this->theme->global_settings['modules']['toEnable'])
-                ->doHookModules($this->theme->global_settings['modules']['toHookOn']);
+        $this->doApplyConfiguration($theme->global_settings['configuration'])
+                ->doDisableModules($theme->global_settings['modules']['toDisable'])
+                ->doEnableModules($theme->global_settings['modules']['toEnable'])
+                ->doHookModules($theme->global_settings['modules']['toHookOn']);
 
         $theme->onEnable();
 
@@ -192,7 +192,7 @@ class ThemeManager implements AddonManagerInterface
 
     private function doApplyConfiguration(array $configuration)
     {
-        foreach ($variable as $key => $value) {
+        foreach ($configuration as $key => $value) {
             $this->configurator->set($key, $value);
         }
         return $this;
