@@ -36,6 +36,7 @@ class ThemeManager implements AddonManagerInterface
 {
     private $shop;
     private $employee;
+    private $theme_checker;
     private $configurator;
     private $themes;
 
