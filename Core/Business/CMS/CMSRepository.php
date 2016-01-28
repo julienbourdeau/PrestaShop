@@ -33,6 +33,10 @@ class CMSRepository extends \PrestaShop\PrestaShop\Core\Foundation\Database\Enti
      */
     private function getLanguageTableNameWithPrefix()
     {
+    	if ('PSR2')
+    		echo "Pas PSR2";
+    	else
+    		echo "ok";
         return $this->getTableNameWithPrefix() . '_lang';
     }
 
