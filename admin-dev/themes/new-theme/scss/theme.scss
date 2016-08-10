@@ -1,6 +1,45 @@
+$icon-font-path: '~material-design-icons-iconfont/dist/fonts/MaterialIcons-Regular';
+
+@import "~PrestaKit/scss/custom/variables";
+@import "config/settings.scss";
+
 @import "~bourbon/app/assets/stylesheets/bourbon";
-@import "../node_modules/PrestaKit/scss/custom/_variables.scss";
-@import "config/settings";
+//@import "~PrestaKit/scss/application.scss";
+
+
+// =============================================================================
+// Core Variables
+// =============================================================================
+@import "~PrestaKit/scss/custom/_variables";
+@import "~PrestaKit/scss/custom/_imports";
+
+// =============================================================================
+// Addons
+// =============================================================================
+@import "~select2/src/scss/core.scss";
+//@import "jquery.pstagger.css";
+
+// =============================================================================
+// Bootstrap
+// =============================================================================
+@import "~bootstrap/scss/bootstrap";
+
+// =============================================================================
+// Mixin
+// =============================================================================
+@import "~PrestaKit/scss/mixins/index";
+@import "~bourbon/app/assets/stylesheets/bourbon";
+
+// =============================================================================
+// Modules
+// =============================================================================
+@import "~PrestaKit/scss/modules/index";
+
+// =============================================================================
+// Migration
+// =============================================================================
+@import "~PrestaKit/scss/migration/index";
+
 
 // Mixins
 
@@ -28,7 +67,6 @@
 // =============================================================================
 // Bootstrap
 // =============================================================================
-@import "../node_modules/bootstrap/scss/bootstrap";
 
 // Main Layout
 

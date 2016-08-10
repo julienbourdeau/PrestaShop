@@ -2,7 +2,7 @@ var path = require('path');
 var webpack = require('webpack');
 var ExtractTextPlugin = require('extract-text-webpack-plugin');
 
-module.exports = {
+module.exports = [{
   entry: [
     'tether/dist/js/tether.js',
     'jquery/dist/jquery.js',
@@ -69,6 +69,29 @@ module.exports = {
         presets: ['es2015']
       }
     }, {
+      test: /.(png|woff(2)?|eot|ttf|svg)(\?[a-z0-9=\.]+)?$/,
+      loader: 'file-loader?name=[hash].[ext]'
+    }]
+  }
+}, {
+  entry: [
+    'dropzone/dist/min/dropzone.min.css',
+    'bootstrap-tokenfield/dist/css/bootstrap-tokenfield.min.css',
+    'bootstrap-tokenfield/dist/css/tokenfield-typeahead.min.css',
+    'eonasdan-bootstrap-datetimepicker/build/css/bootstrap-datetimepicker.min.css',
+    'bootstrap/dist/css/bootstrap.min.css',
+    'magnific-popup/dist/magnific-popup.css',
+    'PrestaKit/dist/css/bootstrap-prestashop-ui-kit.css',
+    'PrestaKit/dist/css/jquery.growl.css',
+    'PrestaKit/dist/css/bootstrap-switch.min.css',
+    './scss/theme.scss'
+  ],
+  output: {
+    path: './public',
+    filename: 'bundle.js'
+  },
+  module: {
+    loaders: [{
       test: /\.scss$/,
       loader: ExtractTextPlugin.extract('style', 'css!sass')
     }, {
@@ -80,20 +103,6 @@ module.exports = {
     }]
   },
   plugins: [
-    new ExtractTextPlugin('theme.css'),
-    new webpack.optimize.UglifyJsPlugin({
-      sourceMap: false,
-      compress: {
-        sequences: true,
-        conditionals: true,
-        booleans: true,
-        if_return: true,
-        join_vars: true,
-        drop_console: true
-      },
-      output: {
-        comments: false
-      }
-    })
+    new ExtractTextPlugin('theme.css')
   ]
-};
+}];
