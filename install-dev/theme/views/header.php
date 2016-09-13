@@ -37,13 +37,6 @@
 		<li class="lnk_forum"><a href="<?php echo $this->getSupportLink() ?>" target="_blank"><?php echo $this->translator->trans('Support', array(), 'Install'); ?></a></li>
 		<li class="lnk_forum"><a href="<?php echo $this->getDocumentationLink() ?>" target="_blank"><?php echo $this->translator->trans('Documentation', array(), 'Install'); ?></a></li>
 		<li class="lnk_blog last"><a href="<?php echo $this->getBlogLink() ?>" target="_blank"><?php echo $this->translator->trans('Blog') ?></a></li>
-		<!--
-		<?php if ($this->getPhone()): ?>
-			<li id="phone_block" class="last">
-				<div><span><?php echo $this->translator->trans('Contact us!', array(), 'Install') ?></span><br /><?php echo $this->getPhone() ?></div>
-			</li>
-		<?php endif; ?>
-		-->
 	</ul>
 
 	<div id="PrestaShopLogo">PrestaShop</div>
