@@ -1,6 +1,6 @@
-var fs = require('fs');
-var exec = require('child_process').exec;
-var del = require('del');
+const fs = require('fs');
+const exec = require('child_process').exec;
+const del = require('del');
 
 const version = process.argv[2];
 
