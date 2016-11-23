@@ -2,6 +2,8 @@ var fs = require('fs');
 var exec = require('child_process').exec;
 var del = require('del');
 
+const version = process.argv[2];
+
 // Update constants
 fs.readFile('../../config/defines.inc.php', 'utf8', (err, content) => {
   if (err) throw err;
@@ -26,6 +28,26 @@ fs.readFile('../../install-dev/data/xml/configuration.xml', 'utf8', (err, conten
 });
 
 
+// Update readme.txt
+[
+  '../../docs/readme_de.txt',
+  '../../docs/readme_en.txt',
+  '../../docs/readme_es.txt',
+  '../../docs/readme_fr.txt',
+  '../../docs/readme_it.txt',
+].forEach((filePath) => {
+  fs.readFile(filePath, 'utf8', (err, content) => {
+    if (err) throw err;
+    fs.writeFileSync(
+      filePath,
+      content
+        .replace(/NAME: Prestashop ([0-9.]*)/, 'NAME: Prestashop '+version)
+        .replace(/VERSION: ([0-9.]*)/, 'VERSION: '+version)
+    );
+  });
+});
+
+
 // Create necessary folders
 fs.stat('../../app/cache', (err, stats) => {
   if (err)
@@ -41,7 +63,6 @@ fs.stat('../../app/logs', (err, stats) => {
 });
 
 
-const version = process.argv[2];
 fs.readFile('../../install-dev/install_version.php', 'utf8', (err, content) => {
   if (err) throw err;
   fs.writeFileSync(
