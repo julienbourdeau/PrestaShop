@@ -299,7 +299,7 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
             if ($manufacturerImageUrl === $undefinedImage) {
                 $manufacturerImageUrl = null;
             }
-            
+
             $productBrandUrl = $this->context->link->getManufacturerLink($productManufacturer->id);
 
             $this->context->smarty->assign(array(
@@ -844,10 +844,7 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
         $product_full['quantity_label'] = ($this->product->quantity > 1) ? $this->trans('Items', array(), 'Shop.Theme.Catalog') : $this->trans('Item', array(), 'Shop.Theme.Catalog');
         $product_full['quantity_discounts'] = $this->quantity_discounts;
 
-        if ($product_full['unit_price_ratio'] > 0) {
-            $unitPrice = ($productSettings->include_taxes) ? $product_full['price'] : $product_full['price_tax_exc'];
-            $product_full['unit_price'] = $unitPrice / $product_full['unit_price_ratio'];
-        }
+        $product_full['unit_price'] = $this->getProductUnitPrice($product);
 
         $group_reduction = GroupReduction::getValueForProduct($this->product->id, (int) Group::getCurrent()->id);
         if ($group_reduction === false) {
@@ -882,6 +879,16 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
         }
 
         return $minimal_quantity;
+    }
+
+    protected function getProductUnitPrice($product)
+    {
+        $calculator = new ProductUnitPriceCalculator(
+            $product['id_product'],
+            $product['id_product_attribute'],
+            $this->context->language->id
+        );
+        return $calculator->getUnitPrice();
     }
 
     /**

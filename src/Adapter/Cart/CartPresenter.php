@@ -41,6 +41,7 @@ use TaxConfiguration;
 use CartRule;
 use Tools;
 use Hook;
+use ProductUnitPriceCalculator;
 
 class CartPresenter implements PresenterInterface
 {
@@ -123,9 +124,7 @@ class CartPresenter implements PresenterInterface
             $rawProduct['price'] = $rawProduct['price_tax_exc'] = $this->priceFormatter->format($rawProduct['price']);
         }
 
-        if ($rawProduct['price_amount'] && $rawProduct['unit_price_ratio'] > 0) {
-            $rawProduct['unit_price'] = $rawProduct['price_amount'] / $rawProduct['unit_price_ratio'];
-        }
+        $rawProduct['unit_price'] = $this->getUnitPrice($rawProduct);
 
         $rawProduct['total'] = $this->priceFormatter->format(
             $this->includeTaxes() ?
@@ -389,7 +388,7 @@ class CartPresenter implements PresenterInterface
 
         $cartRulesIds = array_flip(array_map(
             function ($voucher) {
-               return $voucher['id_cart_rule'];
+                return $voucher['id_cart_rule'];
             },
             $vouchers['added']
         ));
@@ -473,5 +472,16 @@ class CartPresenter implements PresenterInterface
             'allowed' => (int) CartRule::isFeatureActive(),
             'added' => $vouchers,
         );
+    }
+
+    private function getUnitPrice($rawProduct)
+    {
+        $calculator = new ProductUnitPriceCalculator(
+            $rawProduct['id_product'],
+            $rawProduct['id_product_attribute'],
+            Context::getContext()->language->id
+        );
+
+        return $calculator->getUnitPrice();
     }
 }
