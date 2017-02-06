@@ -25,8 +25,8 @@ fs.readFile(`${rootPath}/install-dev/data/xml/configuration.xml`, 'utf8', (err, 
   fs.writeFileSync(
     `${rootPath}/install-dev/data/xml/configuration.xml`,
     content
-      .replace(/name="PS_SMARTY_FORCE_COMPILE"(.*\n*[^\/]*)?value>[\d]+/, 'name="PS_SMARTY_FORCE_COMPILE"$1value>0')
-      .replace(/name="PS_SMARTY_CONSOLE"(.*\n*[^\/]*)?value>[\d]+/, 'name="PS_SMARTY_CONSOLE"$1value>0'),
+      .replace(/name="PS_SMARTY_FORCE_COMPILE"(.*\n*[^/]*)?value>[\d]+/, 'name="PS_SMARTY_FORCE_COMPILE"$1value>0')
+      .replace(/name="PS_SMARTY_CONSOLE"(.*\n*[^/]*)?value>[\d]+/, 'name="PS_SMARTY_CONSOLE"$1value>0'),
   );
 });
 
@@ -39,11 +39,11 @@ fs.readFile(`${rootPath}/install-dev/data/xml/configuration.xml`, 'utf8', (err, 
   '/docs/readme_fr.txt',
   '/docs/readme_it.txt',
 ].forEach((filePath) => {
-  filePath = rootPath + filePath;
-  fs.readFile(filePath, 'utf8', (err, content) => {
+  const fullPath = rootPath + filePath;
+  fs.readFile(fullPath, 'utf8', (err, content) => {
     if (err) throw err;
     fs.writeFileSync(
-      filePath,
+      fullPath,
       content
         .replace(/NAME: Prestashop ([0-9.]*)/, `NAME: Prestashop ${version}`)
         .replace(/VERSION: ([0-9.]*)/, `VERSION: ${version}`),
@@ -53,17 +53,17 @@ fs.readFile(`${rootPath}/install-dev/data/xml/configuration.xml`, 'utf8', (err, 
 
 
 // Create necessary folders
-fs.stat(`${rootPath}/app/cache`, (err, stats) => {
+fs.stat(`${rootPath}/app/cache`, (err) => {
   if (err) {
     fs.mkdir(`${rootPath}/app/cache`, () => {
-      console.log('/app/cache folder created');
+      process.stdout.write('/app/cache folder created');
     });
   }
 });
-fs.stat(`${rootPath}/app/logs`, (err, stats) => {
+fs.stat(`${rootPath}/app/logs`, (err) => {
   if (err) {
     fs.mkdir(`${rootPath}/app/logs`, () => {
-      console.log('/app/logs folder created');
+      process.stdout.write('/app/logs folder created');
     });
   }
 });
@@ -79,12 +79,11 @@ fs.readFile(`${rootPath}/install-dev/install_version.php`, 'utf8', (err, content
 });
 
 
-// child = exec("COMPOSER="+rootPath+"/composer.json COMPOSER_VENDOR_DIR="+rootPath+"/vendor composer install", function (error, stdout, stderr) {
-child = exec(`cd ${rootPath} && composer install`, (error, stdout, stderr) => {
+exec(`cd ${rootPath} && composer install`, (error) => {
   if (error === null) {
-    console.log('Php dependencies installed successfully with composer');
+    process.stdout.write('Php dependencies installed successfully with composer');
   } else {
-    console.log(error);
+    process.stdout.write(error);
   }
 });
 
@@ -101,5 +100,5 @@ del([
   `${rootPath}/.svn`,
   `${rootPath}/**/node_modules`,
 ], { force: true }).then((paths) => {
-  console.log('Deleted files and folders:\n', paths.join('\n'));
+  process.stdout.write('Deleted files and folders:\n', paths.join('\n'));
 });
