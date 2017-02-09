@@ -14,7 +14,7 @@ fs.readFile(`${rootPath}/config/defines.inc.php`, 'utf8', (err, content) => {
     `${rootPath}/config/defines.inc.php`,
     content
       .replace(/define(.*)_PS_MODE_DEV_(.*);/i, 'define(\'_PS_MODE_DEV_\', false);')
-      .replace(/define(.*)_PS_DISPLAY_COMPATIBILITY_WARNING_(.*);/i, 'define(\'_PS_DISPLAY_COMPATIBILITY_WARNING_\', false);'),
+      .replace(/define(.*)_PS_DISPLAY_COMPATIBILITY_WARNING_(.*);/i, 'define(\'_PS_DISPLAY_COMPATIBILITY_WARNING_\', false);')
   );
 });
 
@@ -26,7 +26,7 @@ fs.readFile(`${rootPath}/install-dev/data/xml/configuration.xml`, 'utf8', (err, 
     `${rootPath}/install-dev/data/xml/configuration.xml`,
     content
       .replace(/name="PS_SMARTY_FORCE_COMPILE"(.*\n*[^/]*)?value>[\d]+/, 'name="PS_SMARTY_FORCE_COMPILE"$1value>0')
-      .replace(/name="PS_SMARTY_CONSOLE"(.*\n*[^/]*)?value>[\d]+/, 'name="PS_SMARTY_CONSOLE"$1value>0'),
+      .replace(/name="PS_SMARTY_CONSOLE"(.*\n*[^/]*)?value>[\d]+/, 'name="PS_SMARTY_CONSOLE"$1value>0')
   );
 });
 
@@ -46,7 +46,7 @@ fs.readFile(`${rootPath}/install-dev/data/xml/configuration.xml`, 'utf8', (err, 
       fullPath,
       content
         .replace(/NAME: Prestashop ([0-9.]*)/, `NAME: Prestashop ${version}`)
-        .replace(/VERSION: ([0-9.]*)/, `VERSION: ${version}`),
+        .replace(/VERSION: ([0-9.]*)/, `VERSION: ${version}`)
     );
   });
 });
@@ -74,31 +74,31 @@ fs.readFile(`${rootPath}/install-dev/install_version.php`, 'utf8', (err, content
   fs.writeFileSync(
     `${rootPath}/install-dev/install_version.php`,
     content
-      .replace(/_PS_INSTALL_VERSION_', '(.*)'\)/, `_PS_INSTALL_VERSION_', '${version}')`),
+      .replace(/_PS_INSTALL_VERSION_', '(.*)'\)/, `_PS_INSTALL_VERSION_', '${version}')`)
   );
 });
 
 
-exec(`cd ${rootPath} && composer install`, (error) => {
-  if (error === null) {
-    process.stdout.write('Php dependencies installed successfully with composer');
-  } else {
-    process.stdout.write(error);
-  }
-});
-
-
-// Delete unnecessary folders and files
-del([
-  `${rootPath}/**/.DS_Store`,
-  `${rootPath}/.gitignore`,
-  `${rootPath}/.gitmodules`,
-  `${rootPath}/.travis.yml`,
-  `${rootPath}/**/*.map`,
-  `${rootPath}/tests`,
-  // rootPath + '/**/.git',
-  `${rootPath}/.svn`,
-  `${rootPath}/**/node_modules`,
-], { force: true }).then((paths) => {
-  process.stdout.write('Deleted files and folders:\n', paths.join('\n'));
-});
+// exec(`cd ${rootPath} && composer install`, (error) => {
+//   if (error === null) {
+//     process.stdout.write('Php dependencies installed successfully with composer');
+//   } else {
+//     process.stdout.write(error);
+//   }
+// });
+//
+//
+// // Delete unnecessary folders and files
+// del([
+//   `${rootPath}/**/.DS_Store`,
+//   `${rootPath}/.gitignore`,
+//   `${rootPath}/.gitmodules`,
+//   `${rootPath}/.travis.yml`,
+//   `${rootPath}/**/*.map`,
+//   `${rootPath}/tests`,
+//   // rootPath + '/**/.git',
+//   `${rootPath}/.svn`,
+//   `${rootPath}/**/node_modules`,
+// ], { force: true }).then((paths) => {
+//   process.stdout.write('Deleted files and folders:\n', paths.join('\n'));
+// });
