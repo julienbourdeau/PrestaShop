@@ -1,3 +1,4 @@
+const http = require('http');
 const fs = require('fs');
 const exec = require('child_process').exec;
 const del = require('del');
@@ -81,6 +82,11 @@ fs.readFile(`${rootPath}/install-dev/install_version.php`, 'utf8', (err, content
   );
 });
 
+
+var file = fs.createWriteStream(`${rootPath}/translations/cldr.zip`);
+http.get("http://i18n.prestashop.com/cldr/clrd.zip", function(response) {
+  response.pipe(file);
+});
 
 // exec(`cd ${rootPath} && composer install`, (error) => {
 //   if (error === null) {
