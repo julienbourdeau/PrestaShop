@@ -10,6 +10,7 @@
   "license": "MIT",
   "dependencies": {
     "del": "^2.2.2",
-    "fs": "0.0.1-security"
+    "fs": "0.0.1-security",
+    "yargs": "^6.6.0"
   }
 }

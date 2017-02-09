@@ -3,7 +3,12 @@ const exec = require('child_process').exec;
 const del = require('del');
 const path = require('path');
 
-const version = process.argv[2];
+var argv = require('yargs')
+    .usage('Usage: $0 --version [num]')
+    .demandOption(['version'])
+    .describe('version', 'Version of the release')
+    .example('$0 --version 1.7.1.0', 'Transform a git repo into a release')
+    .argv;
 
 const rootPath = path.normalize(`${__dirname}/../..`);
 
@@ -45,8 +50,8 @@ fs.readFile(`${rootPath}/install-dev/data/xml/configuration.xml`, 'utf8', (err, 
     fs.writeFileSync(
       fullPath,
       content
-        .replace(/NAME: Prestashop ([0-9.]*)/, `NAME: Prestashop ${version}`)
-        .replace(/VERSION: ([0-9.]*)/, `VERSION: ${version}`)
+        .replace(/NAME: Prestashop ([0-9.]*)/, `NAME: Prestashop ${argv.version}`)
+        .replace(/VERSION: ([0-9.]*)/, `VERSION: ${argv.version}`)
     );
   });
 });
@@ -74,7 +79,7 @@ fs.readFile(`${rootPath}/install-dev/install_version.php`, 'utf8', (err, content
   fs.writeFileSync(
     `${rootPath}/install-dev/install_version.php`,
     content
-      .replace(/_PS_INSTALL_VERSION_', '(.*)'\)/, `_PS_INSTALL_VERSION_', '${version}')`)
+      .replace(/_PS_INSTALL_VERSION_', '(.*)'\)/, `_PS_INSTALL_VERSION_', '${argv.version}')`)
   );
 });
 
