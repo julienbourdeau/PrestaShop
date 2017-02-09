@@ -12,6 +12,7 @@ var argv = require('yargs')
 
 const rootPath = path.normalize(`${__dirname}/../..`);
 
+
 // Update constants
 fs.readFile(`${rootPath}/config/defines.inc.php`, 'utf8', (err, content) => {
   if (err) throw err;
@@ -58,24 +59,21 @@ fs.readFile(`${rootPath}/install-dev/data/xml/configuration.xml`, 'utf8', (err, 
 
 
 // Create necessary folders
-fs.stat(`${rootPath}/app/cache`, (err) => {
-  if (err) {
-    fs.mkdir(`${rootPath}/app/cache`, () => {
-      process.stdout.write('/app/cache folder created');
-    });
-  }
-});
-fs.stat(`${rootPath}/app/logs`, (err) => {
-  if (err) {
-    fs.mkdir(`${rootPath}/app/logs`, () => {
-      process.stdout.write('/app/logs folder created');
-    });
-  }
+del([
+  `${rootPath}/app/cache`,
+  `${rootPath}/app/logs`,
+], {force: true}).then((paths) => {
+  paths.forEach((path) => {
+    console.log(path);
+  })
+}).catch((paths) => {
+  process.stdout.write('Something went wrong');
 });
 
 
 fs.readFile(`${rootPath}/install-dev/install_version.php`, 'utf8', (err, content) => {
   if (err) throw err;
+
   fs.writeFileSync(
     `${rootPath}/install-dev/install_version.php`,
     content
