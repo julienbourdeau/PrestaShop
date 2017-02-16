@@ -84,30 +84,30 @@ fs.readFile(`${rootPath}/install-dev/install_version.php`, 'utf8', (err, content
 
 
 var file = fs.createWriteStream(`${rootPath}/translations/cldr.zip`);
-http.get("http://i18n.prestashop.com/cldr/clrd.zip", function(response) {
+http.get("http://i18n.prestashop.com/cldr/cldr.zip", function(response) {
   response.pipe(file);
 });
 
-// exec(`cd ${rootPath} && composer install`, (error) => {
-//   if (error === null) {
-//     process.stdout.write('Php dependencies installed successfully with composer');
-//   } else {
-//     process.stdout.write(error);
-//   }
-// });
-//
-//
-// // Delete unnecessary folders and files
-// del([
-//   `${rootPath}/**/.DS_Store`,
-//   `${rootPath}/.gitignore`,
-//   `${rootPath}/.gitmodules`,
-//   `${rootPath}/.travis.yml`,
-//   `${rootPath}/**/*.map`,
-//   `${rootPath}/tests`,
-//   // rootPath + '/**/.git',
-//   `${rootPath}/.svn`,
-//   `${rootPath}/**/node_modules`,
-// ], { force: true }).then((paths) => {
-//   process.stdout.write('Deleted files and folders:\n', paths.join('\n'));
-// });
+exec(`cd ${rootPath} && composer install`, (error) => {
+  if (error === null) {
+    process.stdout.write('Php dependencies installed successfully with composer');
+  } else {
+    process.stdout.write(error);
+  }
+});
+
+
+// Delete unnecessary folders and files
+del([
+  `${rootPath}/**/.DS_Store`,
+  `${rootPath}/.gitignore`,
+  `${rootPath}/.gitmodules`,
+  `${rootPath}/.travis.yml`,
+  `${rootPath}/**/*.map`,
+  `${rootPath}/tests`,
+  // `${rootPath}//**/.git`,
+  `${rootPath}/.svn`,
+  `${rootPath}/**/node_modules`,
+], { force: true }).then((paths) => {
+  process.stdout.write('Deleted files and folders:\n', paths.join('\n'));
+});
